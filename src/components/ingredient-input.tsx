@@ -1,45 +1,34 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import { ingredientsList } from "@/data/ingredients";
 import { useIngredients } from "@/hooks/useIngredients";
-import { Search, X } from "lucide-react";
+import { PlusCircle, Search, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 export const IngredientInput = () => {
-  const [input, setInput] = useState("");
-  const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedIngredients, setSelectedIngredients] = useIngredients();
-  const suggestionsRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const commandRef = useRef<HTMLDivElement>(null);
 
-  // Update suggestions based on input
-  useEffect(() => {
-    if (input) {
-      const filtered = ingredientsList.filter(
-        (item) =>
-          item.toLowerCase().includes(input.toLowerCase()) &&
-          !(selectedIngredients || []).includes(item),
-      );
-      setSuggestions(filtered.slice(0, 5));
-      setShowSuggestions(true);
-    } else {
-      setSuggestions([]);
-      setShowSuggestions(false);
-    }
-  }, [input, selectedIngredients]);
-
-  // Close suggestions when clicking outside
+  // Close search when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
-        suggestionsRef.current &&
-        !suggestionsRef.current.contains(event.target as Node) &&
-        inputRef.current &&
-        !inputRef.current.contains(event.target as Node)
+        commandRef.current &&
+        !commandRef.current.contains(event.target as Node)
       ) {
-        setShowSuggestions(false);
+        setIsSearchOpen(false);
       }
     };
 
@@ -52,8 +41,8 @@ export const IngredientInput = () => {
   const addIngredient = (ingredient: string) => {
     if (!(selectedIngredients || []).includes(ingredient)) {
       setSelectedIngredients([...(selectedIngredients || []), ingredient]);
-      setInput("");
-      setShowSuggestions(false);
+      setSearchQuery("");
+      setIsSearchOpen(false);
     }
   };
 
@@ -62,6 +51,15 @@ export const IngredientInput = () => {
       (selectedIngredients || []).filter((item) => item !== ingredient),
     );
   };
+
+  // Filter out already selected ingredients
+  const availableIngredients = ingredientsList
+    .filter((ingredient) => !(selectedIngredients || []).includes(ingredient))
+    .filter(
+      (ingredient) =>
+        !searchQuery ||
+        ingredient.toLowerCase().includes(searchQuery.toLowerCase()),
+    );
 
   return (
     <div id="ingredients" className="w-full">
@@ -78,37 +76,41 @@ export const IngredientInput = () => {
           </div>
 
           <div className="mx-auto w-full max-w-xl">
-            <div className="relative">
-              <div className="flex items-center rounded-lg border bg-background px-3 py-2 text-sm ring-offset-background">
-                <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
-                <input
-                  ref={inputRef}
-                  type="text"
-                  placeholder="Search ingredients..."
-                  className="flex-1 bg-transparent outline-none placeholder:text-muted-foreground"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onFocus={() => input && setShowSuggestions(true)}
-                />
+            {isSearchOpen ? (
+              <div ref={commandRef}>
+                <Command className="rounded-lg border shadow-md">
+                  <CommandInput
+                    placeholder="Search ingredients..."
+                    value={searchQuery}
+                    onValueChange={setSearchQuery}
+                  />
+                  <CommandList>
+                    <CommandEmpty>No ingredients found.</CommandEmpty>
+                    <CommandGroup heading="Available Ingredients">
+                      {availableIngredients.map((ingredient) => (
+                        <CommandItem
+                          key={ingredient}
+                          onSelect={() => addIngredient(ingredient)}
+                          className="cursor-pointer"
+                        >
+                          <Search className="mr-2 h-4 w-4" />
+                          {ingredient}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
               </div>
-
-              {showSuggestions && suggestions.length > 0 && (
-                <div
-                  ref={suggestionsRef}
-                  className="absolute z-10 mt-1 w-full overflow-hidden rounded-md border bg-white p-1 shadow-lg"
-                >
-                  {suggestions.map((suggestion) => (
-                    <div
-                      key={suggestion}
-                      className="cursor-pointer rounded-sm px-3 py-2 text-sm hover:bg-secondary"
-                      onClick={() => addIngredient(suggestion)}
-                    >
-                      {suggestion}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            ) : (
+              <Button
+                onClick={() => setIsSearchOpen(true)}
+                variant="outline"
+                className="w-full justify-start"
+              >
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Add ingredients...
+              </Button>
+            )}
 
             <div className="mt-4 flex flex-wrap gap-2">
               {(selectedIngredients || []).map((ingredient) => (

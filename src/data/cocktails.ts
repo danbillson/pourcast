@@ -1,5 +1,8 @@
 import { Cocktail } from "@/lib/types";
 
+// Use placeholder image for all cocktails
+const placeholderImage = "/images/cocktail-placeholder.svg";
+
 export const cocktails: Cocktail[] = [
   {
     id: "mojito-lime",
@@ -7,7 +10,7 @@ export const cocktails: Cocktail[] = [
     ingredients: ["Lime", "Mint Leaves", "White Rum", "Soda Water", "Sugar"],
     instructions:
       "Muddle mint leaves with sugar and lime juice. Add a splash of soda water and fill the glass with crushed ice. Pour the rum and top with soda water. Garnish with mint leaves and a lime wedge.",
-    image: "/images/mojito.jpg",
+    image: placeholderImage,
     submittedBy: "Emma Rodriguez",
   },
   {
@@ -22,7 +25,7 @@ export const cocktails: Cocktail[] = [
     ],
     instructions:
       "Place sugar cube in an Old Fashioned glass and saturate with bitters. Add a dash of water, muddle until dissolved. Fill the glass with ice cubes and add bourbon. Garnish with orange peel.",
-    image: "/images/old-fashioned.jpg",
+    image: placeholderImage,
     submittedBy: "Classic Bar Manual",
   },
   {
@@ -31,7 +34,7 @@ export const cocktails: Cocktail[] = [
     ingredients: ["Tequila", "Triple Sec", "Lime Juice", "Salt"],
     instructions:
       "Rub the rim of a glass with lime juice and dip in salt. Shake tequila, triple sec, and lime juice with ice and strain into the glass. Garnish with a lime wheel.",
-    image: "/images/margarita.jpg",
+    image: placeholderImage,
     submittedBy: "Cocktail Association",
   },
   {
@@ -40,7 +43,7 @@ export const cocktails: Cocktail[] = [
     ingredients: ["Gin", "Campari", "Sweet Red Vermouth"],
     instructions:
       "Stir all ingredients with ice and strain into a rocks glass over a large ice cube. Garnish with an orange peel.",
-    image: "/images/negroni.jpg",
+    image: placeholderImage,
     submittedBy: "Italian Mixology Institute",
   },
   {
@@ -49,7 +52,7 @@ export const cocktails: Cocktail[] = [
     ingredients: ["Bourbon", "Lemon Juice", "Simple Syrup", "Egg White"],
     instructions:
       "Shake all ingredients with ice. Strain into a rocks glass over fresh ice. Optionally garnish with a lemon wheel and cherry.",
-    image: "/images/whiskey-sour.jpg",
+    image: placeholderImage,
     submittedBy: "American Bartenders Guild",
   },
 ];

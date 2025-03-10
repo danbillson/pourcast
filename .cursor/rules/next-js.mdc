@@ -1,6 +1,6 @@
 ---
 description: write consice next.js, react and typescript
-globs: *.ts*
+globs: *.tsx, *.ts
 alwaysApply: false
 ---
 

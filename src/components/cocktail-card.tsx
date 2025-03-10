@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Cocktail } from "@/lib/types";
 import Image from "next/image";
 import Link from "next/link";
@@ -27,22 +28,19 @@ export const CocktailCard = ({
     (haveIngredients.length / ingredients.length) * 100,
   );
 
+  // Placeholder image path
+  const placeholderImage = "/images/cocktail-placeholder.svg";
+
   return (
     <Link href={`/recipe/${id}`} className="group">
-      <div className="overflow-hidden rounded-lg border bg-background transition-all hover:shadow-md">
+      <Card className="overflow-hidden transition-all hover:shadow-md">
         <div className="relative aspect-video w-full overflow-hidden bg-secondary/20">
-          {image ? (
-            <Image
-              src={image}
-              alt={name}
-              fill
-              className="object-cover transition-all group-hover:scale-105"
-            />
-          ) : (
-            <div className="flex h-full items-center justify-center text-muted-foreground">
-              No image available
-            </div>
-          )}
+          <Image
+            src={image || placeholderImage}
+            alt={name}
+            fill
+            className="object-cover transition-all group-hover:scale-105"
+          />
           <div className="absolute right-2 top-2">
             <Badge variant={matchPercentage === 100 ? "default" : "secondary"}>
               {matchPercentage}% match
@@ -50,39 +48,37 @@ export const CocktailCard = ({
           </div>
         </div>
 
-        <div className="p-4">
-          <h3 className="font-medium">{name}</h3>
+        <CardHeader className="p-4 pb-0">
+          <CardTitle className="text-lg font-medium">{name}</CardTitle>
           <p className="text-sm text-muted-foreground">
             By {submittedBy || "Unknown"}
           </p>
+        </CardHeader>
 
-          <div className="mt-4">
-            <div className="mb-2 text-xs font-medium uppercase">
-              Ingredients
-            </div>
-            <div className="flex flex-wrap gap-1">
-              {haveIngredients.map((ingredient) => (
-                <Badge
-                  key={ingredient}
-                  variant="outline"
-                  className="bg-green-50 text-green-700"
-                >
-                  {ingredient}
-                </Badge>
-              ))}
-              {missingIngredients.map((ingredient) => (
-                <Badge
-                  key={ingredient}
-                  variant="outline"
-                  className="text-red-700"
-                >
-                  {ingredient}
-                </Badge>
-              ))}
-            </div>
+        <CardContent className="p-4 pt-2">
+          <div className="mb-2 text-xs font-medium uppercase">Ingredients</div>
+          <div className="flex flex-wrap gap-1">
+            {haveIngredients.map((ingredient) => (
+              <Badge
+                key={ingredient}
+                variant="outline"
+                className="bg-green-50 text-green-700"
+              >
+                {ingredient}
+              </Badge>
+            ))}
+            {missingIngredients.map((ingredient) => (
+              <Badge
+                key={ingredient}
+                variant="outline"
+                className="text-red-700"
+              >
+                {ingredient}
+              </Badge>
+            ))}
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </Link>
   );
 };

@@ -2,51 +2,65 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { ingredientsList } from "@/data/ingredients";
-import { X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const RecipeSubmissionForm = () => {
   const [name, setName] = useState("");
   const [ingredientInput, setIngredientInput] = useState("");
-  const [suggestions, setSuggestions] = useState<string[]>([]);
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
   const [instructions, setInstructions] = useState("");
   const [submitterName, setSubmitterName] = useState("");
-  const [showSuggestions, setShowSuggestions] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [showCommandMenu, setShowCommandMenu] = useState(false);
+  const commandRef = useRef<HTMLDivElement>(null);
 
   const router = useRouter();
 
-  const handleIngredientInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const value = e.target.value;
-    setIngredientInput(value);
+  // Close command menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        commandRef.current &&
+        !commandRef.current.contains(event.target as Node)
+      ) {
+        setShowCommandMenu(false);
+      }
+    };
 
-    if (value) {
-      const filtered = ingredientsList.filter(
-        (item) =>
-          item.toLowerCase().includes(value.toLowerCase()) &&
-          !selectedIngredients.includes(item),
-      );
-      setSuggestions(filtered.slice(0, 5));
-      setShowSuggestions(true);
-    } else {
-      setSuggestions([]);
-      setShowSuggestions(false);
-    }
-  };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // Filter ingredients that are not already selected
+  const availableIngredients = ingredientsList
+    .filter((ingredient) => !selectedIngredients.includes(ingredient))
+    .filter(
+      (ingredient) =>
+        !ingredientInput ||
+        ingredient.toLowerCase().includes(ingredientInput.toLowerCase()),
+    );
 
   const addIngredient = (ingredient: string) => {
     if (!selectedIngredients.includes(ingredient)) {
       setSelectedIngredients([...selectedIngredients, ingredient]);
       setIngredientInput("");
-      setSuggestions([]);
-      setShowSuggestions(false);
     }
   };
 
@@ -110,12 +124,10 @@ export const RecipeSubmissionForm = () => {
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="space-y-2">
             <Label htmlFor="name">Cocktail Name</Label>
-            <input
+            <Input
               id="name"
-              type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background"
               placeholder="Enter cocktail name"
               required
             />
@@ -124,26 +136,43 @@ export const RecipeSubmissionForm = () => {
           <div className="space-y-2">
             <Label htmlFor="ingredients">Ingredients</Label>
             <div className="relative">
-              <input
-                id="ingredients"
-                type="text"
-                value={ingredientInput}
-                onChange={handleIngredientInputChange}
-                className="w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background"
-                placeholder="Add ingredients one by one"
-              />
+              <div onClick={() => setShowCommandMenu(true)}>
+                <Input
+                  id="ingredients"
+                  value={ingredientInput}
+                  onChange={(e) => setIngredientInput(e.target.value)}
+                  placeholder="Add ingredients one by one"
+                  onFocus={() => setShowCommandMenu(true)}
+                />
+              </div>
 
-              {showSuggestions && suggestions.length > 0 && (
-                <div className="absolute z-10 mt-1 w-full overflow-hidden rounded-md border bg-white p-1 shadow-lg">
-                  {suggestions.map((suggestion) => (
-                    <div
-                      key={suggestion}
-                      className="cursor-pointer rounded-sm px-3 py-2 text-sm hover:bg-secondary"
-                      onClick={() => addIngredient(suggestion)}
-                    >
-                      {suggestion}
-                    </div>
-                  ))}
+              {showCommandMenu && (
+                <div className="absolute z-10 mt-1 w-full" ref={commandRef}>
+                  <Command className="rounded-lg border shadow-md">
+                    <CommandInput
+                      placeholder="Search ingredients..."
+                      value={ingredientInput}
+                      onValueChange={setIngredientInput}
+                    />
+                    <CommandList>
+                      <CommandEmpty>No ingredients found.</CommandEmpty>
+                      <CommandGroup heading="Available Ingredients">
+                        {availableIngredients.slice(0, 10).map((ingredient) => (
+                          <CommandItem
+                            key={ingredient}
+                            onSelect={() => {
+                              addIngredient(ingredient);
+                              setShowCommandMenu(false);
+                            }}
+                            className="cursor-pointer"
+                          >
+                            <Search className="mr-2 h-4 w-4" />
+                            {ingredient}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
                 </div>
               )}
             </div>
@@ -172,24 +201,22 @@ export const RecipeSubmissionForm = () => {
 
           <div className="space-y-2">
             <Label htmlFor="instructions">Instructions</Label>
-            <textarea
+            <Textarea
               id="instructions"
               value={instructions}
               onChange={(e) => setInstructions(e.target.value)}
-              className="h-40 w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background"
               placeholder="Enter preparation instructions"
+              className="h-40"
               required
             />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="submitter">Your Name (Optional)</Label>
-            <input
+            <Input
               id="submitter"
-              type="text"
               value={submitterName}
               onChange={(e) => setSubmitterName(e.target.value)}
-              className="w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background"
               placeholder="Enter your name or pseudonym"
             />
           </div>

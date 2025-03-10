@@ -49,20 +49,24 @@ export const CocktailCard = ({
         </div>
 
         <CardHeader className="p-4 pb-0">
-          <CardTitle className="text-lg font-medium">{name}</CardTitle>
-          <p className="text-sm text-muted-foreground">
+          <CardTitle className="text-espresso-800 font-serif text-lg font-medium">
+            {name}
+          </CardTitle>
+          <p className="text-espresso-600 text-sm">
             By {submittedBy || "Unknown"}
           </p>
         </CardHeader>
 
         <CardContent className="p-4 pt-2">
-          <div className="mb-2 text-xs font-medium uppercase">Ingredients</div>
+          <div className="text-espresso-700 mb-2 text-xs font-medium uppercase">
+            Ingredients
+          </div>
           <div className="flex flex-wrap gap-1">
             {haveIngredients.map((ingredient) => (
               <Badge
                 key={ingredient}
                 variant="outline"
-                className="bg-green-50 text-green-700"
+                className="bg-cream-200 text-espresso-700"
               >
                 {ingredient}
               </Badge>
@@ -71,7 +75,7 @@ export const CocktailCard = ({
               <Badge
                 key={ingredient}
                 variant="outline"
-                className="text-red-700"
+                className="border-cream-200 text-espresso-400"
               >
                 {ingredient}
               </Badge>

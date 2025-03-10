@@ -92,32 +92,31 @@ export const IngredientInput = () => {
     );
 
   return (
-    <div id="ingredients" className="w-full">
-      <div className="container mx-auto py-12">
+    <div id="ingredients" className="bg-cream-100/50 w-full py-12">
+      <div className="container mx-auto">
         <div className="flex flex-col gap-8">
           <div className="mx-auto max-w-xl text-center">
-            <h2 className="text-3xl font-semibold tracking-tight">
+            <h2 className="text-espresso-800 font-serif text-3xl font-medium tracking-tight">
               What&apos;s in your bar?
             </h2>
-            <p className="mt-2 text-muted-foreground">
+            <p className="text-espresso-600 mt-2">
               Add the ingredients you have and we&apos;ll show you cocktails you
               can make
             </p>
           </div>
 
-          <div className="mx-auto w-full max-w-xl">
+          <div className="border-cream-200 mx-auto w-full max-w-xl rounded-lg border bg-white/80 p-6 shadow-sm backdrop-blur-sm">
             {/* Selected ingredients display */}
             <div className="mb-4 flex flex-wrap gap-2">
               {(selectedIngredients || []).length > 0 ? (
                 (selectedIngredients || []).map((ingredient) => (
                   <Badge
                     key={ingredient}
-                    variant="secondary"
-                    className="flex items-center gap-1"
+                    className="bg-cream-200 text-espresso-700 hover:bg-cream-300 px-3 py-1"
                   >
                     {ingredient}
                     <X
-                      className="h-3 w-3 cursor-pointer"
+                      className="text-espresso-500 ml-1 h-3 w-3 cursor-pointer"
                       onClick={() => removeIngredient(ingredient)}
                       role="button"
                       tabIndex={0}
@@ -131,7 +130,7 @@ export const IngredientInput = () => {
                   </Badge>
                 ))
               ) : (
-                <p className="text-sm text-muted-foreground">
+                <p className="text-espresso-500 text-sm">
                   No ingredients selected yet. Add some below.
                 </p>
               )}
@@ -143,12 +142,12 @@ export const IngredientInput = () => {
                 ref={buttonRef}
                 onClick={toggleSearch}
                 variant="outline"
-                className="w-full justify-start"
+                className="border-cream-300 bg-cream-50 text-espresso-700 hover:bg-cream-100 w-full justify-start"
                 aria-expanded={isSearchOpen}
                 aria-haspopup="listbox"
                 aria-controls="ingredient-command"
               >
-                <PlusCircle className="mr-2 h-4 w-4" />
+                <PlusCircle className="text-espresso-500 mr-2 h-4 w-4" />
                 {isSearchOpen
                   ? "Searching ingredients..."
                   : "Add ingredients..."}
@@ -163,23 +162,27 @@ export const IngredientInput = () => {
                   aria-label="Search ingredients"
                   id="ingredient-command"
                 >
-                  <Command className="rounded-lg border shadow-md">
+                  <Command className="border-cream-200 rounded-lg border shadow-md">
                     <CommandInput
                       placeholder="Search ingredients..."
                       value={searchQuery}
                       onValueChange={setSearchQuery}
                       ref={inputRef}
+                      className="border-b-cream-200"
                     />
                     <CommandList>
                       <CommandEmpty>No ingredients found.</CommandEmpty>
-                      <CommandGroup heading="Available Ingredients">
+                      <CommandGroup
+                        heading="Available Ingredients"
+                        className="text-espresso-600"
+                      >
                         {availableIngredients.map((ingredient) => (
                           <CommandItem
                             key={ingredient}
                             onSelect={() => addIngredient(ingredient)}
-                            className="cursor-pointer"
+                            className="text-espresso-800 hover:bg-cream-100 cursor-pointer"
                           >
-                            <Search className="mr-2 h-4 w-4" />
+                            <Search className="text-espresso-400 mr-2 h-4 w-4" />
                             {ingredient}
                           </CommandItem>
                         ))}

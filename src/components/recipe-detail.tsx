@@ -46,21 +46,26 @@ export const RecipeDetail = ({ cocktail }: RecipeDetailProps) => {
 
         <Card className="border-0 shadow-none">
           <CardHeader className="px-0">
-            <CardTitle className="text-4xl font-bold tracking-tight">
+            <CardTitle className="text-espresso-900 font-serif text-4xl font-bold tracking-tight">
               {name}
             </CardTitle>
-            <p className="mt-2 text-muted-foreground">
+            <p className="text-espresso-600 mt-2">
               Submitted by {submittedBy || "Anonymous"}
             </p>
           </CardHeader>
 
           <CardContent className="px-0">
             <div className="mb-8">
-              <h2 className="text-xl font-semibold">Ingredients</h2>
+              <h2 className="text-espresso-800 font-serif text-xl font-semibold">
+                Ingredients
+              </h2>
               <ul className="mt-4 space-y-2">
                 {ingredients.map((ingredient, index) => (
-                  <li key={index} className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-600" />
+                  <li
+                    key={index}
+                    className="text-espresso-700 flex items-center gap-2"
+                  >
+                    <CheckCircle className="text-espresso-500 h-4 w-4" />
                     {ingredient}
                   </li>
                 ))}
@@ -68,8 +73,10 @@ export const RecipeDetail = ({ cocktail }: RecipeDetailProps) => {
             </div>
 
             <div>
-              <h2 className="text-xl font-semibold">Instructions</h2>
-              <p className="mt-4 whitespace-pre-wrap text-muted-foreground">
+              <h2 className="text-espresso-800 font-serif text-xl font-semibold">
+                Instructions
+              </h2>
+              <p className="text-espresso-700 mt-4 whitespace-pre-wrap">
                 {instructions}
               </p>
             </div>

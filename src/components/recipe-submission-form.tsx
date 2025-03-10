@@ -100,20 +100,22 @@ export const RecipeSubmissionForm = () => {
   return (
     <div className="container mx-auto max-w-2xl py-12">
       <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold tracking-tight">
+        <h1 className="text-espresso-900 font-serif text-3xl font-bold tracking-tight">
           Share Your Cocktail
         </h1>
-        <p className="mt-2 text-muted-foreground">
+        <p className="text-espresso-600 mt-2">
           Have a unique recipe? Share it with the Pourcast community!
         </p>
       </div>
 
       {success ? (
-        <div className="rounded-lg bg-green-50 p-4 text-center text-green-700">
-          <p className="font-medium">Recipe submitted successfully!</p>
+        <div className="bg-cream-100 border-cream-200 text-espresso-700 rounded-lg border p-4 text-center">
+          <p className="text-espresso-800 font-serif font-medium">
+            Recipe submitted successfully!
+          </p>
           <p className="mt-2">Thank you for contributing to our collection.</p>
           <Button
-            className="mt-4"
+            className="bg-espresso-700 text-cream-50 hover:bg-espresso-800 mt-4"
             variant="outline"
             onClick={() => router.push("/")}
           >
@@ -123,18 +125,26 @@ export const RecipeSubmissionForm = () => {
       ) : (
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="space-y-2">
-            <Label htmlFor="name">Cocktail Name</Label>
+            <Label htmlFor="name" className="text-espresso-800 font-serif">
+              Cocktail Name
+            </Label>
             <Input
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter cocktail name"
               required
+              className="border-cream-200"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="ingredients">Ingredients</Label>
+            <Label
+              htmlFor="ingredients"
+              className="text-espresso-800 font-serif"
+            >
+              Ingredients
+            </Label>
             <div className="relative">
               <div onClick={() => setShowCommandMenu(true)}>
                 <Input
@@ -200,30 +210,38 @@ export const RecipeSubmissionForm = () => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="instructions">Instructions</Label>
+            <Label
+              htmlFor="instructions"
+              className="text-espresso-800 font-serif"
+            >
+              Instructions
+            </Label>
             <Textarea
               id="instructions"
               value={instructions}
               onChange={(e) => setInstructions(e.target.value)}
               placeholder="Enter preparation instructions"
-              className="h-40"
+              className="border-cream-200 h-40"
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="submitter">Your Name (Optional)</Label>
+            <Label htmlFor="submitter" className="text-espresso-800 font-serif">
+              Your Name (Optional)
+            </Label>
             <Input
               id="submitter"
               value={submitterName}
               onChange={(e) => setSubmitterName(e.target.value)}
               placeholder="Enter your name or pseudonym"
+              className="border-cream-200"
             />
           </div>
 
           <Button
             type="submit"
-            className="w-full"
+            className="bg-espresso-700 text-cream-50 hover:bg-espresso-800 w-full"
             disabled={
               name === "" ||
               selectedIngredients.length === 0 ||

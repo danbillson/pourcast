@@ -45,16 +45,16 @@ export const CocktailList = () => {
   }
 
   return (
-    <div className="w-full bg-secondary/5">
+    <div className="bg-cream-100/50 w-full">
       <div className="container mx-auto py-12">
         <div className="flex flex-col gap-8">
           <div className="text-center">
-            <h2 className="text-3xl font-semibold tracking-tight">
+            <h2 className="text-espresso-800 font-serif text-3xl font-semibold tracking-tight">
               {filteredCocktails.length > 0
                 ? "Cocktails you can make"
                 : "No cocktails found with those ingredients"}
             </h2>
-            <p className="mt-2 text-muted-foreground">
+            <p className="text-espresso-600 mt-2">
               {filteredCocktails.length > 0
                 ? "Here are some cocktails you can make with your ingredients"
                 : "Try adding more ingredients or removing some to find matches"}

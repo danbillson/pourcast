@@ -1,7 +1,8 @@
 "use client";
 
-import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
+import { clientIngredientsParsers } from "@/lib/client-params";
+import { useQueryState } from "nuqs";
 
 export function useIngredients() {
-  return useQueryState("ingredient", parseAsArrayOf(parseAsString));
+  return useQueryState("ingredient", clientIngredientsParsers.ingredient);
 }

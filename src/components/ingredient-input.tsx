@@ -92,7 +92,7 @@ export const IngredientInput = () => {
     );
 
   return (
-    <div id="ingredients" className="bg-cream-100/50 w-full py-12">
+    <div id="ingredients" className="bg-cream-100/50 z-10 w-full py-12">
       <div className="container mx-auto">
         <div className="flex flex-col gap-8">
           <div className="mx-auto max-w-xl text-center">

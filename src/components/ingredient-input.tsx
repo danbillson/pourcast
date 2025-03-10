@@ -13,13 +13,15 @@ import {
 import { ingredientsList } from "@/data/ingredients";
 import { useIngredients } from "@/hooks/useIngredients";
 import { PlusCircle, Search, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { KeyboardEvent, useEffect, useRef, useState } from "react";
 
 export const IngredientInput = () => {
   const [selectedIngredients, setSelectedIngredients] = useIngredients();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const commandRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   // Close search when clicking outside
   useEffect(() => {
@@ -38,11 +40,22 @@ export const IngredientInput = () => {
     };
   }, []);
 
+  // Focus input when search opens
+  useEffect(() => {
+    if (isSearchOpen && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isSearchOpen]);
+
   const addIngredient = (ingredient: string) => {
     if (!(selectedIngredients || []).includes(ingredient)) {
       setSelectedIngredients([...(selectedIngredients || []), ingredient]);
       setSearchQuery("");
-      setIsSearchOpen(false);
+
+      // Keep focus in the command input to allow for continuous entry
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
     }
   };
 
@@ -50,6 +63,23 @@ export const IngredientInput = () => {
     setSelectedIngredients(
       (selectedIngredients || []).filter((item) => item !== ingredient),
     );
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    // Escape key to close
+    if (e.key === "Escape") {
+      setIsSearchOpen(false);
+      if (buttonRef.current) {
+        buttonRef.current.focus();
+      }
+    }
+  };
+
+  const toggleSearch = () => {
+    setIsSearchOpen(!isSearchOpen);
+    if (!isSearchOpen && inputRef.current) {
+      setTimeout(() => inputRef.current?.focus(), 10);
+    }
   };
 
   // Filter out already selected ingredients
@@ -76,56 +106,88 @@ export const IngredientInput = () => {
           </div>
 
           <div className="mx-auto w-full max-w-xl">
-            {isSearchOpen ? (
-              <div ref={commandRef}>
-                <Command className="rounded-lg border shadow-md">
-                  <CommandInput
-                    placeholder="Search ingredients..."
-                    value={searchQuery}
-                    onValueChange={setSearchQuery}
-                  />
-                  <CommandList>
-                    <CommandEmpty>No ingredients found.</CommandEmpty>
-                    <CommandGroup heading="Available Ingredients">
-                      {availableIngredients.map((ingredient) => (
-                        <CommandItem
-                          key={ingredient}
-                          onSelect={() => addIngredient(ingredient)}
-                          className="cursor-pointer"
-                        >
-                          <Search className="mr-2 h-4 w-4" />
-                          {ingredient}
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </div>
-            ) : (
+            {/* Selected ingredients display */}
+            <div className="mb-4 flex flex-wrap gap-2">
+              {(selectedIngredients || []).length > 0 ? (
+                (selectedIngredients || []).map((ingredient) => (
+                  <Badge
+                    key={ingredient}
+                    variant="secondary"
+                    className="flex items-center gap-1"
+                  >
+                    {ingredient}
+                    <X
+                      className="h-3 w-3 cursor-pointer"
+                      onClick={() => removeIngredient(ingredient)}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Remove ${ingredient}`}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          removeIngredient(ingredient);
+                        }
+                      }}
+                    />
+                  </Badge>
+                ))
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  No ingredients selected yet. Add some below.
+                </p>
+              )}
+            </div>
+
+            {/* Search control */}
+            <div className="relative">
               <Button
-                onClick={() => setIsSearchOpen(true)}
+                ref={buttonRef}
+                onClick={toggleSearch}
                 variant="outline"
                 className="w-full justify-start"
+                aria-expanded={isSearchOpen}
+                aria-haspopup="listbox"
+                aria-controls="ingredient-command"
               >
                 <PlusCircle className="mr-2 h-4 w-4" />
-                Add ingredients...
+                {isSearchOpen
+                  ? "Searching ingredients..."
+                  : "Add ingredients..."}
               </Button>
-            )}
 
-            <div className="mt-4 flex flex-wrap gap-2">
-              {(selectedIngredients || []).map((ingredient) => (
-                <Badge
-                  key={ingredient}
-                  variant="secondary"
-                  className="flex items-center gap-1"
+              {isSearchOpen && (
+                <div
+                  ref={commandRef}
+                  className="absolute z-10 mt-1 w-full"
+                  onKeyDown={handleKeyDown}
+                  role="dialog"
+                  aria-label="Search ingredients"
+                  id="ingredient-command"
                 >
-                  {ingredient}
-                  <X
-                    className="h-3 w-3 cursor-pointer"
-                    onClick={() => removeIngredient(ingredient)}
-                  />
-                </Badge>
-              ))}
+                  <Command className="rounded-lg border shadow-md">
+                    <CommandInput
+                      placeholder="Search ingredients..."
+                      value={searchQuery}
+                      onValueChange={setSearchQuery}
+                      ref={inputRef}
+                    />
+                    <CommandList>
+                      <CommandEmpty>No ingredients found.</CommandEmpty>
+                      <CommandGroup heading="Available Ingredients">
+                        {availableIngredients.map((ingredient) => (
+                          <CommandItem
+                            key={ingredient}
+                            onSelect={() => addIngredient(ingredient)}
+                            className="cursor-pointer"
+                          >
+                            <Search className="mr-2 h-4 w-4" />
+                            {ingredient}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </div>
+              )}
             </div>
           </div>
         </div>

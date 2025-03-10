@@ -1,0 +1,82 @@
+export const ingredientsList: string[] = [
+  // Spirits
+  "Vodka",
+  "Gin",
+  "Rum",
+  "White Rum",
+  "Dark Rum",
+  "Tequila",
+  "Bourbon",
+  "Whiskey",
+  "Scotch",
+  "Brandy",
+  "Cognac",
+
+  // Liqueurs
+  "Triple Sec",
+  "Cointreau",
+  "Grand Marnier",
+  "Kahlua",
+  "Baileys",
+  "Amaretto",
+  "Campari",
+  "Aperol",
+  "Vermouth",
+  "Sweet Red Vermouth",
+  "Dry Vermouth",
+
+  // Mixers
+  "Soda Water",
+  "Tonic Water",
+  "Cola",
+  "Ginger Beer",
+  "Ginger Ale",
+  "Lemonade",
+  "Orange Juice",
+  "Cranberry Juice",
+  "Pineapple Juice",
+  "Tomato Juice",
+
+  // Fruits
+  "Lime",
+  "Lemon",
+  "Orange",
+  "Grapefruit",
+  "Pineapple",
+  "Strawberry",
+  "Raspberry",
+  "Blackberry",
+  "Watermelon",
+  "Coconut",
+
+  // Herbs and Spices
+  "Mint Leaves",
+  "Basil",
+  "Rosemary",
+  "Thyme",
+  "Cinnamon",
+  "Nutmeg",
+  "Vanilla",
+  "Salt",
+  "Pepper",
+
+  // Sweeteners and Bitters
+  "Sugar",
+  "Sugar Cube",
+  "Simple Syrup",
+  "Honey",
+  "Maple Syrup",
+  "Agave Nectar",
+  "Grenadine",
+  "Angostura Bitters",
+  "Orange Bitters",
+
+  // Others
+  "Egg White",
+  "Cream",
+  "Ice",
+  "Water",
+  "Orange Peel",
+  "Lemon Peel",
+  "Lime Peel",
+];

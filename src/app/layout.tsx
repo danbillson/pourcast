@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Header } from "@/components/header";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 const geistSans = Geist({
@@ -28,7 +29,17 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <NuqsAdapter>{children}</NuqsAdapter>
+        <NuqsAdapter>
+          <div className="flex min-h-screen flex-col">
+            <Header />
+            <main className="flex-1">{children}</main>
+            <footer className="border-t py-6">
+              <div className="container mx-auto text-center text-sm text-muted-foreground">
+                © {new Date().getFullYear()} Pourcast. All rights reserved.
+              </div>
+            </footer>
+          </div>
+        </NuqsAdapter>
       </body>
     </html>
   );
